@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ════════════════════════════════════════════════════
+   BASE
+   ════════════════════════════════════════════════════ */
+:root {
+  --bg: #F5EFE6;
+  --bone: #FBF8F2;
+  --ink: #1B1B1A;
+  --ink-soft: #3A3733;
+  --ink-mute: #7E7A74;
+  --cypress: #2C3D33;
+  --clay: #B8553D;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: 'ss01', 'ss02';
+}
+
+/* Subtle paper grain — gives the cream background depth without
+   looking like a stock texture. SVG noise, low opacity. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.106 0 0 0 0 0.106 0 0 0 0 0.102 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* ════════════════════════════════════════════════════
+   TYPOGRAPHY HELPERS
+   ════════════════════════════════════════════════════ */
+
+/* The display serif — used for editorial moments. Fraunces with
+   high optical size and slightly soft weight reads warm without
+   feeling vintage. */
+.font-display {
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 0;
+  letter-spacing: -0.035em;
+}
+
+.font-display-italic {
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+.eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+
+/* ════════════════════════════════════════════════════
+   COMPONENTS
+   ════════════════════════════════════════════════════ */
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-4 bg-ink text-bone
+           font-medium tracking-tight rounded-full transition-all duration-300
+           hover:bg-cypress hover:translate-y-[-1px] active:translate-y-0;
+  }
+
+  .btn-clay {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-4 bg-clay text-bone
+           font-medium tracking-tight rounded-full transition-all duration-300
+           hover:bg-clay-deep hover:translate-y-[-1px] active:translate-y-0;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-4
+           border border-ink/20 text-ink font-medium tracking-tight rounded-full
+           transition-all duration-300 hover:border-ink hover:bg-ink/[0.03];
+  }
+
+  .btn-link {
+    @apply inline-flex items-center gap-2 text-ink font-medium tracking-tight
+           border-b border-ink pb-1 transition-all hover:gap-3;
+  }
+
+  .surface-card {
+    @apply bg-bone border border-sand/60 rounded-3xl;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3.5 bg-bone border border-sand rounded-xl
+           text-ink placeholder:text-ink-mute/60
+           focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink/10
+           transition-colors;
+  }
+}
+
+/* ════════════════════════════════════════════════════
+   UTILITIES
+   ════════════════════════════════════════════════════ */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Subtle text balance for hero headlines */
+.text-balance { text-wrap: balance; }
+.text-pretty  { text-wrap: pretty; }
+
+/* Reveal animation — used by the Reveal component via JS observer.
+   We expose a CSS class so even without JS the content is visible. */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Marquee track (for the trust strip) */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Soft underline-on-hover for editorial links */
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-underline:hover {
+  background-size: 100% 1px;
+}
